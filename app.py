@@ -1,47 +1,50 @@
 import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
 
-# Load your data from CSV
-data = pd.read_csv("Dataset/train.csv")  # Replace with your filename 
+# Define pages
+def home():
+    st.title("Home")
+    st.write("Welcome to the home page of the data dashboard!")
 
-# Streamlit app configuration (optional)
-st.set_page_config(
-    page_title="Mohs Hardness Data Dashboard",
-    page_icon=":hammer:",
-)
+def data_page():
+    st.title("Data Page")
+    st.write("This is the data page where you can explore various datasets.")
 
-# Display title
-st.title("Mohs Hardness Test Data")
+def analysis_page():
+    st.title("Analysis Page")
+    st.write("This is the analysis page where you can view data analyses.")
 
-# Select columns for exploration (optional)
-selected_columns = st.multiselect(
-    "Select features to explore:", data.columns[:-1], default=["allelectrons_Average", "density_Average"]  # Exclude target variable
-)
+# Define a function to display the header
+def display_header():
+    st.markdown("""
+    <div style="background-color:lightblue; padding:10px">
+    <h1 style="color:black; text-align:center;">Data Dashboard</h1>
+    </div>
+    """, unsafe_allow_html=True)
+def display_footer():
+    st.markdown("""
+    <div style="background-color:lightblue; padding:10px; position:fixed; bottom:0; width:100%">
+    <p style="color:black; text-align:center;">&copy; 2024 Data Dashboard</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-# Correlation heatmap
-fig, ax = plt.subplots()
-correlation = data[selected_columns].corr()
-ax.imshow(correlation, cmap="coolwarm")
-ax.set_title("Correlation Heatmap")
-ax.set_xticks(range(len(correlation.columns)))
-ax.set_yticks(range(len(correlation.columns)))
-ax.set_xticklabels(correlation.columns, rotation=45, ha="right")
-ax.set_yticklabels(correlation.columns)
-st.pyplot(fig)
+# Main app function
+def main():
+    st.sidebar.title("Navigation")
+    page = st.sidebar.radio("Go to", ["Home", "Data Page", "Analysis Page"])
 
-# Scatter plots (consider using st.altair for more advanced charts)
-st.subheader("Scatter Plots")
-for col in selected_columns:
-    fig, ax = plt.subplots()
-    ax.scatter(data["Hardness"], data[col])
-    ax.set_title(f"Hardness vs {col}")
-    ax.set_xlabel("Hardness")
-    ax.set_ylabel(col)
-    st.pyplot(fig)
+    # Display header
+    display_header()
 
-# Additional analysis based on your interests
-# - Explore relationships between Mohs hardness and other features
-# - Filter data by hardness range
-# - Use color-coding to highlight trends
+    # Display selected page
+    if page == "Home":
+        home()
+    elif page == "Data Page":
+        data_page()
+    elif page == "Analysis Page":
+        analysis_page()
 
+    # Display footer
+    display_footer()
+
+if __name__ == "__main__":
+    main()
